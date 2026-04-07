@@ -26,14 +26,15 @@
         &:link,
         &:visited {
             text-decoration: none;
-            color: var(--light-slate);
-            letter-spacing: 0.15em;
-            -webkit-writing-mode: vertical-rl;
-            writing-mode: vertical-rl;
+            color: var(--lightest-slate);
             margin: 20px auto;
             font-size: 1.3rem;
-            padding: 10px;
+            padding: 10px 6px;
             transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         &:hover {
@@ -44,13 +45,45 @@
 
     }
 
+    &__emailIcon {
+        width: 2.6rem;
+        height: 2.6rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.8rem;
+        border: 1px solid rgba(#ffd700, 0.35);
+        background: rgba(#ffd700, 0.08);
+        transform: rotate(90deg);
+
+        svg {
+            width: 1.55rem;
+            height: 1.55rem;
+            stroke: var(--lightest-slate);
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+    }
+
+    &__emailText {
+        letter-spacing: 0.15em;
+        -webkit-writing-mode: vertical-lr;
+        writing-mode: vertical-lr;
+    }
+
+    &__email:hover &__emailIcon svg {
+        stroke: var(--primary);
+    }
+
     &__line {
         content: "";
         display: block;
         width: 1px;
         height: 9rem;
         margin: 0px auto;
-        background-color: var(--light-slate);
+        background-color: var(--lightest-slate);
         margin-top: 1.3rem;
     }
 

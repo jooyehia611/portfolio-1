@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import AnimatedLetters from '@components/AnimatedLetters/AnimatedLetters';
 import './introduction.scss';
 
@@ -7,11 +7,12 @@ const Introduction = () => {
   const [letterClass, setLetterClass] = useState('text-animate');
   const nameArray = [...'Yousef,'];
   const jobArray = [...'Senior Backend Developer'];
+  const skills = ['PHP', 'Laravel', 'REST APIs', 'MySQL'];
 
   useEffect(() => {
     setTimeout(() => {
       setLetterClass('text-animate-hover');
-    }, 4000);
+    }, 3000);
   });
 
   return (
@@ -20,24 +21,28 @@ const Introduction = () => {
         <span className='sectiontag'>&lt;section&gt;</span>
         <h1 className='intro__headingPrimary'>
           <span className={letterClass}>H</span>
-          <span className={`${letterClass} _12`}>i,</span>
+          <span className={`${letterClass} _5`}>i,</span>
 &nbsp;
           <br />
-          <span className={`${letterClass} _13`}>I</span>
-          <span className={`${letterClass} _14`}>&apos;m</span>
+          <span className={`${letterClass} _6`}>I</span>
+          <span className={`${letterClass} _7`}>&apos;m</span>
 &nbsp;
           <span className='intro__nameWrap'>
-            <AnimatedLetters letterClass={letterClass} strArray={nameArray} idx={15} />
+            <AnimatedLetters letterClass={letterClass} strArray={nameArray} idx={5} />
           </span>
           <br />
           <span className='intro__jobWrap'>
-            <AnimatedLetters letterClass={letterClass} strArray={jobArray} idx={19} />
+            <AnimatedLetters letterClass={letterClass} strArray={jobArray} idx={7} />
           </span>
         </h1>
-        <h2 className='intro__headingSecondary'>PHP · Laravel · REST APIs · MySQL</h2>
-        <Link to='/contact' className='intro__button'>
+        <h2 className='intro__headingSecondary'>
+          {skills.map((skill) => (
+            <span key={skill} className='intro__skillBadge'>{skill}</span>
+          ))}
+        </h2>
+        <HashLink to='/#contact' className='intro__button'>
           Contact Me
-        </Link>
+        </HashLink>
         <span className='sectiontag'>&lt;/section&gt;</span>
       </div>
       <div className='intro__right'>

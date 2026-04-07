@@ -62,7 +62,87 @@
     }
 
     &__description {
-        color: var(--light-slate);
-        margin-bottom: 2rem;
+        color: var(--lightest-slate);
+        margin-bottom: 2.4rem;
+    }
+
+    &__contacts {
+        width: 100%;
+        max-width: 72rem;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.2rem;
+
+        @include respond(tab-port) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__contactCard {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(#ffd700, 0.35);
+        background: linear-gradient(145deg, rgba(#1a2f53, 0.92), rgba(#112240, 0.98));
+        padding: 1.1rem 1.2rem;
+        transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+        &:hover {
+            transform: translateY(-3px);
+            border-color: rgba(#ffd700, 0.65);
+            box-shadow: 0 14px 30px -18px rgba(2, 12, 27, 0.9);
+        }
+    }
+
+    &__contactIcon {
+        width: 3.4rem;
+        height: 3.4rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.8rem;
+        background: rgba(#ffd700, 0.12);
+        border: 1px solid rgba(#ffd700, 0.35);
+
+    }
+
+    &__contactIconSvg {
+        width: 1.9rem;
+        height: 1.9rem;
+
+        &--mail {
+            stroke: var(--primary);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        &--brand {
+            fill: var(--primary);
+        }
+    }
+
+    &__contactText {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    &__contactLabel {
+        color: var(--lightest-slate);
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    &__contactValue {
+        color: var(--lightest-slate);
+        font-size: 1.25rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

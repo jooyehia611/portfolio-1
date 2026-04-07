@@ -59,32 +59,32 @@ applications.
           <div className='cubespinner'>
             <div className='face1'>
               <svg className='about__icon' role='img' aria-label='Laravel'>
-                <use href='icons/symbol-defs.svg#icon-laravel' />
+                <use href='/icons/symbol-defs.svg#icon-laravel' />
               </svg>
             </div>
             <div className='face2'>
-              <svg className='about__icon' role='img' aria-label='PHP'>
-                <use href='icons/symbol-defs.svg#icon-php' />
+              <svg className='about__icon about__icon--php' role='img' aria-label='PHP'>
+                <use href='/icons/symbol-defs.svg#icon-php' />
               </svg>
             </div>
             <div className='face3'>
               <svg className='about__icon' role='img' aria-label='React'>
-                <use href='icons/symbol-defs.svg#icon-react' />
+                <use href='/icons/symbol-defs.svg#icon-react' />
               </svg>
             </div>
             <div className='face4'>
               <svg className='about__icon' role='img' aria-label='JavaScript'>
-                <use href='icons/symbol-defs.svg#icon-javascript' />
+                <use href='/icons/symbol-defs.svg#icon-javascript' />
               </svg>
             </div>
             <div className='face5'>
               <svg className='about__icon' role='img' aria-label='HTML5'>
-                <use href='icons/symbol-defs.svg#icon-html5' />
+                <use href='/icons/symbol-defs.svg#icon-html5' />
               </svg>
             </div>
             <div className='face6'>
-              <svg className='about__icon' role='img' aria-label='Laravel'>
-                <use href='icons/symbol-defs.svg#icon-laravel' />
+              <svg className='about__icon' role='img' aria-label='WordPress'>
+                <use href='/icons/symbol-defs.svg#icon-wordpress' />
               </svg>
             </div>
           </div>

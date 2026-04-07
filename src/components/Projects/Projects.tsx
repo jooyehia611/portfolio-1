@@ -35,7 +35,11 @@ const Project = () => {
               <p className='project__description'>
                 End-to-end procurement covering RFQs, purchase orders, suppliers, invoicing, and reporting. Built to streamline approvals, reduce manual work, and give finance and operations a single source of truth.
               </p>
-              <div className='project__tags'>Laravel &nbsp; MySQL &nbsp; REST APIs &nbsp;</div>
+              <div className='project__tags project__tags--right'>
+                <span className='project__tagBadge'>Laravel</span>
+                <span className='project__tagBadge'>MySQL</span>
+                <span className='project__tagBadge'>REST APIs</span>
+              </div>
             </div>
           </div>
         </section>
@@ -49,7 +53,11 @@ const Project = () => {
               <p className='project__description'>
                 RFID-aware 3PL system with RESTful APIs for inbound/outbound flows, scheduling, user roles (representatives and operators), and operational reporting—built to support real warehouse teams and end users.
               </p>
-              <div className='project__tags'>Laravel &nbsp; REST APIs &nbsp; Multi-user workflows</div>
+              <div className='project__tags project__tags--left'>
+                <span className='project__tagBadge'>Laravel</span>
+                <span className='project__tagBadge'>REST APIs</span>
+                <span className='project__tagBadge'>Multi-user workflows</span>
+              </div>
             </div>
           </div>
           <div className='project__right'>
@@ -69,7 +77,10 @@ const Project = () => {
               <p className='project__description'>
                 Multi-branch clinic operations: scheduling, reservations, patient intake, billing, and analytics. Centralizes day-to-day clinical and admin work so staff spend less time on spreadsheets and more time with patients.
               </p>
-              <div className='project__tags'>Laravel &nbsp; MySQL</div>
+              <div className='project__tags project__tags--right'>
+                <span className='project__tagBadge'>Laravel</span>
+                <span className='project__tagBadge'>MySQL</span>
+              </div>
             </div>
           </div>
         </section>
@@ -90,7 +101,11 @@ const Project = () => {
               </p>
             </div>
             <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>Laravel &nbsp; MySQL &nbsp; REST APIs</div>
+              <div className='projectResp__tags'>
+                <span className='projectResp__tagBadge'>Laravel</span>
+                <span className='projectResp__tagBadge'>MySQL</span>
+                <span className='projectResp__tagBadge'>REST APIs</span>
+              </div>
             </div>
           </div>
         </li>
@@ -108,7 +123,11 @@ const Project = () => {
               </p>
             </div>
             <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>Laravel &nbsp; RFID &nbsp; REST APIs</div>
+              <div className='projectResp__tags'>
+                <span className='projectResp__tagBadge'>Laravel</span>
+                <span className='projectResp__tagBadge'>RFID</span>
+                <span className='projectResp__tagBadge'>REST APIs</span>
+              </div>
             </div>
           </div>
         </li>
@@ -126,7 +145,11 @@ const Project = () => {
               </p>
             </div>
             <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>Laravel &nbsp; MySQL &nbsp; Dashboards</div>
+              <div className='projectResp__tags'>
+                <span className='projectResp__tagBadge'>Laravel</span>
+                <span className='projectResp__tagBadge'>MySQL</span>
+                <span className='projectResp__tagBadge'>Dashboards</span>
+              </div>
             </div>
           </div>
         </li>

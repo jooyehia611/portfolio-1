@@ -91,7 +91,7 @@
             }
 
             &Description {
-                color: #a8b2d1;
+                color: var(--lightest-slate);
                 font-size: 1.4rem;
                 margin-top: 0.6rem;
             }
@@ -106,6 +106,27 @@
             width: 3rem;
             height: 3rem;
             fill: var(--primary);
+        }
+
+        &IconWrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 1.2rem;
+            background: linear-gradient(145deg, rgba(#1a2f53, 0.95), rgba(#112240, 0.98));
+            border: 1px solid rgba(#ffd700, 0.42);
+            box-shadow: 0 10px 25px -16px rgba(2, 12, 27, 0.8);
+        }
+
+        &Icon {
+            width: 2.7rem;
+            height: 2.7rem;
+            stroke: var(--primary);
+            stroke-width: 2.1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
     }
 
@@ -122,8 +143,23 @@
     }
 
     &__tags {
-        color: var(--light-slate);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
         margin-top: 1rem;
-        font-size: 1.4rem;
+    }
+
+    &__tagBadge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--lightest-slate);
+        border: 1px solid rgba(#ffd700, 0.45);
+        background-color: rgba(#ffd700, 0.08);
+        border-radius: 999px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 1.1;
+        padding: 0.42rem 0.9rem;
     }
 }

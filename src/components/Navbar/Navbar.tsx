@@ -7,7 +7,7 @@ const Navbar = () => (
   <nav className='navbar'>
     <div className='navbar__left'>
       <Link to='/' className='navbar__link'>
-        <img alt='logo' src='https://res.cloudinary.com/dhbiouaym/image/upload/v1663667966/Portfolio/logo_qny4vm.png' className='navbar__img' />
+        <img alt='logo' src='/favicon/favicon-32x32.png' className='navbar__img' />
       </Link>
     </div>
     <div className='navbar__right'>

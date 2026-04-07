@@ -7,7 +7,7 @@
     position: relative;
 
     &__lede {
-        color: var(--slate);
+        color: var(--lightest-slate);
         font-size: 1.6rem;
         max-width: 72rem;
         line-height: 1.7;
@@ -85,14 +85,14 @@
 
     &__period {
         font-size: 1.3rem;
-        color: var(--light-slate);
+        color: var(--lightest-slate);
         font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
     }
 
     &__bullets {
         margin: 0;
         padding-left: 1.8rem;
-        color: var(--light-slate);
+        color: var(--lightest-slate);
         font-size: 1.4rem;
         line-height: 1.75;
         letter-spacing: 0.35px;

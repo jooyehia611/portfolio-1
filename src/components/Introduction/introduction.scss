@@ -124,11 +124,11 @@
     }
 
     &__headingSecondary {
-        color: var(--slate);
-        font-size: 1.4rem;
-        letter-spacing: 3px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        align-items: center;
         animation: fadeIn 1s 1.8s backwards;
-        font-weight: 500;
         margin-bottom: 4.6rem;
 
         &::before {
@@ -151,6 +151,21 @@
             font-weight: 500;
             animation: fadeIn 1s 1.7s backwards;
         }
+    }
+
+    &__skillBadge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--lightest-slate);
+        border: 1px solid rgba(#ffd700, 0.45);
+        background-color: rgba(#ffd700, 0.08);
+        border-radius: 999px;
+        font-size: 1.3rem;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        line-height: 1;
     }
 
     &__description {
