@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import './navbar.scss';
 
@@ -31,10 +31,10 @@ const Navbar = () => (
           </HashLink>
         </li>
         <li className='navbar__items'>
-          <NavLink to='/contact' className='navbar__itemsLink'>
+          <HashLink to='/#contact' className='navbar__itemsLink'>
             <span className='navbar__itemsLinkNumeric'>04.</span>
             Contact
-          </NavLink>
+          </HashLink>
         </li>
       </ul>
       <a href='/cv-yousef-yehia.pdf' target='_blank' rel='noreferrer' className='navbar__button'>Resume</a>

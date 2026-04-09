@@ -3,159 +3,242 @@ import './projects.scss';
 import LazyLoad from 'react-lazyload';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
 
-const imgProcurement = 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80';
-const imgLogistics = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80';
-const imgHealthcare = 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80';
+type ProjectCategory = 'company' | 'freelance';
+type ProjectItem = {
+  title: string;
+  image: string;
+  imageAlt: string;
+  summary: string;
+  tags: string[];
+  category: ProjectCategory;
+};
+
+const PROJECT_CARDS: ProjectItem[] = [
+  {
+    title: 'Procurement Platform',
+    image: '/images/procurement.png',
+    imageAlt: 'Procurement platform dashboard',
+    summary: 'End-to-end procurement platform for RFQs, purchase orders, suppliers, invoicing, and reporting to streamline approvals and reduce manual operations.',
+    tags: ['Laravel', 'MySQL', 'REST APIs'],
+    category: 'company',
+  },
+  {
+    title: 'Warehouse & Logistics (3PL)',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Warehouse and logistics operations',
+    summary: 'RFID-aware 3PL workflows with APIs for inbound/outbound operations, scheduling, and operational reporting.',
+    tags: ['Laravel', 'RFID', 'REST APIs'],
+    category: 'company',
+  },
+  {
+    title: 'Clinic & Healthcare Suite',
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Healthcare technology concept',
+    summary: 'Multi-branch clinic system covering scheduling, patient intake, billing, and analytics across operations teams.',
+    tags: ['Laravel', 'MySQL', 'Dashboards'],
+    category: 'company',
+  },
+  {
+    title: 'Medica Mall',
+    image: '/images/medicamall.png',
+    imageAlt: 'Medica Mall Magento 2 online medical store',
+    summary:
+      'E-commerce platform using Magento 2 for an online medical store. Handled theme customization, product management, and performance optimization.',
+    tags: ['Magento 2', 'E-commerce', 'Medical'],
+    category: 'company',
+  },
+  {
+    title: 'Souq Alat',
+    image: '/images/souqalat.png',
+    imageAlt: 'Souq Alat surgical instruments and medical supplies storefront',
+    summary:
+      'E-commerce platform using Magento 2 for a surgical instruments and medical supplies store.',
+    tags: ['Magento 2', 'E-commerce', 'Medical Supplies'],
+    category: 'company',
+  },
+  {
+    title: 'Multi-vendor Marketplace',
+    image: '/images/xshop.png',
+    imageAlt: 'Marketplace operations and order management',
+    summary: 'On-demand ordering and delivery platform with vendor/admin workflows, payment gateways, Firebase, Twilio SMS, and realtime updates.',
+    tags: ['Laravel', 'APIs', 'Realtime'],
+    category: 'freelance',
+  },
+  {
+    title: 'Real Estate Product',
+    image: '/images/real.png',
+    imageAlt: 'Real estate listings platform',
+    summary: 'Listings and broker-focused platform with search, OTP auth, favorites, referrals, wallet flows, and Sanctum-secured APIs.',
+    tags: ['Laravel', 'REST APIs', 'Sanctum'],
+    category: 'company',
+  },
+  {
+    title: 'Umrah & Hajj Booking',
+    image: '/images/haj.png',
+    imageAlt: 'Travel booking and package management',
+    summary: 'Package booking and operations system with approvals, accommodation, transport, meal planning, agents, and commissions.',
+    tags: ['Laravel', 'Booking', 'Backoffice'],
+    category: 'freelance',
+  },
+  {
+    title: 'Eyadty (Healthcare)',
+    image: '/images/misrmodern.png',
+    imageAlt: 'Eyadty healthcare platform screenshot',
+    summary: 'Modular clinic and dental practice platform centralizing day-to-day clinical and administrative workflows.',
+    tags: ['Laravel', 'Healthcare', 'Operations'],
+    category: 'freelance',
+  },
+  {
+    title: 'Property Management Platform',
+    image: '/images/property.png',
+    imageAlt: 'Property management records dashboard',
+    summary: 'Web app for real-estate record management, multi-owner structures, and legal documentation in one centralized system.',
+    tags: ['Laravel', 'Real Estate', 'Backoffice'],
+    category: 'company',
+  },
+  {
+    title: 'CarLog APIs',
+    image: 'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Fleet and vehicle tracking dashboard',
+    summary: 'REST APIs for company vehicles and equipment including user tracking, odometer monitoring, usage logs, and inspection checklists.',
+    tags: ['REST APIs', 'Laravel', 'Fleet'],
+    category: 'company',
+  },
+  {
+    title: 'Freelancers/Clients Multi-branch Platform',
+    image: '/images/easylist.png',
+    imageAlt: 'Freelancers and clients multi-branch platform dashboard',
+    summary: 'Platform for orders, transfers, referral/commission workflows, lead-source CRM, and financial dashboards for revenue and net profit.',
+    tags: ['Laravel', 'CRM', 'Dashboards'],
+    category: 'freelance',
+  },
+  {
+    title: 'Sports Membership System',
+    image: '/images/sportclub.png',
+    imageAlt: 'Sports facility membership and access control',
+    summary: 'Membership lifecycle and facility operations system with permissioned admin console, payments, and token-authenticated mobile APIs for attendance/access.',
+    tags: ['Laravel', 'APIs', 'Access Control'],
+    category: 'freelance',
+  },
+  {
+    title: 'Fitness Pioneers',
+    image: '/images/fitnesspioneers.png',
+    imageAlt: 'Fitness Pioneers training and consulting platform',
+    summary:
+      'Fitness Pioneers is a leading organization in sports training and consulting, specializing in developing fitness professionals through accredited programs in sports science and personal training, in collaboration with international bodies such as the American College of Sports Medicine and American Council on Exercise.',
+    tags: ['Sports Training', 'Consulting', 'Accredited Programs'],
+    category: 'company',
+  },
+  {
+    title: 'Venue & Dining Platform',
+    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Venue booking and dining reservations',
+    summary: 'Role-based admin platform for reservations, orders, users, and content with secure APIs (Sanctum/JWT) from auth to checkout.',
+    tags: ['Laravel', 'Sanctum/JWT', 'Reservations'],
+    category: 'company',
+  },
+];
 
 const Project = () => {
   const [letterClass, setLetterClass] = useState('text-animate-fast');
+  const [showAll, setShowAll] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const nameArray = [...'03. My Projects'];
+  const initialVisibleCount = 8;
 
   useEffect(() => {
     setTimeout(() => {
       setLetterClass('text-animate-fast-hover');
     }, 4000);
   });
+
+  useEffect(() => {
+    if (!selectedProject) return () => {};
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [selectedProject]);
+
+  const visibleProjects = showAll ? PROJECT_CARDS : PROJECT_CARDS.slice(0, initialVisibleCount);
   return (
     <div className='project' id='projects'>
-      <span className='sectiontag'>&lt;section&gt;</span>
       <h1 className='about__headingPrimary'>
         <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
       </h1>
+      <p className='project__lede'>
+        Interactive 3D project showcase across company and freelance work. Hover any card to reveal stack, context, and delivery focus.
+      </p>
 
-      <LazyLoad once height={400}>
-        <section className='project__section'>
-          <div className='project__left'>
-            <img className='project__img' src={imgProcurement} alt='Team collaborating on procurement software' />
-          </div>
-          <div className='project__right'>
-            <h3 className='project__headingTertiary'>Featured project</h3>
-            <h2 className='project__headingSecondary project__headingSecondary--static'>Procurement platform</h2>
-            <div className='project__descriptionContainer'>
-              <p className='project__description'>
-                End-to-end procurement covering RFQs, purchase orders, suppliers, invoicing, and reporting. Built to streamline approvals, reduce manual work, and give finance and operations a single source of truth.
-              </p>
-              <div className='project__tags project__tags--right'>
-                <span className='project__tagBadge'>Laravel</span>
-                <span className='project__tagBadge'>MySQL</span>
-                <span className='project__tagBadge'>REST APIs</span>
+      <div className='project__deck'>
+        {visibleProjects.map((card, index) => (
+          <LazyLoad once height={330} key={card.title}>
+            <article className='project__card' style={{ animationDelay: `${index * 55}ms` }}>
+              <button
+                type='button'
+                className='project__cardMedia'
+                onClick={() => setSelectedProject(card)}
+                aria-label={`Open ${card.title} image`}
+              >
+                <img className='project__cardImage' src={card.image} alt={card.imageAlt} />
+              </button>
+              <div className='project__cardBody'>
+                <div className='project__cardTop'>
+                  <h3 className='project__title'>{card.title}</h3>
+                </div>
+                <p className='project__summary'>{card.summary}</p>
+                <div className='project__tags'>
+                  {card.tags.map((tag) => (
+                    <span key={`${card.title}-${tag}`} className='project__tagBadge'>{tag}</span>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
-      </LazyLoad>
-      <LazyLoad once height={400}>
-        <section className='project__section'>
-          <div className='project__left1'>
-            <h3 className='project__headingTertiary'>Featured project</h3>
-            <h2 className='project__headingSecondary project__headingSecondary--static'>Warehouse &amp; logistics (3PL)</h2>
-            <div className='project__descriptionContainer project__descriptionContainer1'>
-              <p className='project__description'>
-                RFID-aware 3PL system with RESTful APIs for inbound/outbound flows, scheduling, user roles (representatives and operators), and operational reporting—built to support real warehouse teams and end users.
-              </p>
-              <div className='project__tags project__tags--left'>
-                <span className='project__tagBadge'>Laravel</span>
-                <span className='project__tagBadge'>REST APIs</span>
-                <span className='project__tagBadge'>Multi-user workflows</span>
-              </div>
-            </div>
-          </div>
-          <div className='project__right'>
-            <img className='project__img' src={imgLogistics} alt='Warehouse and logistics operations' />
-          </div>
-        </section>
-      </LazyLoad>
-      <LazyLoad once height={400}>
-        <section className='project__section project__section3'>
-          <div className='project__left'>
-            <img className='project__img' src={imgHealthcare} alt='Healthcare technology concept' />
-          </div>
-          <div className='project__right'>
-            <h3 className='project__headingTertiary'>Featured project</h3>
-            <h2 className='project__headingSecondary project__headingSecondary--static'>Clinic &amp; healthcare suite</h2>
-            <div className='project__descriptionContainer'>
-              <p className='project__description'>
-                Multi-branch clinic operations: scheduling, reservations, patient intake, billing, and analytics. Centralizes day-to-day clinical and admin work so staff spend less time on spreadsheets and more time with patients.
-              </p>
-              <div className='project__tags project__tags--right'>
-                <span className='project__tagBadge'>Laravel</span>
-                <span className='project__tagBadge'>MySQL</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </LazyLoad>
+            </article>
+          </LazyLoad>
+        ))}
+      </div>
 
-      <ul className='projectResp__list'>
-        <li className='projectResp__items projectResp__items1'>
-          <div className='projectResp__card'>
-            <div className='projectResp__cardTop'>
-              <svg className='projectResp__cardFolder'>
-                <use href='icons/symbol-defs.svg#icon-folder' />
-              </svg>
-            </div>
-            <div className='projectResp__cardBody'>
-              <div className='projectResp__cardBodyHeading'>Procurement platform</div>
-              <p className='projectResp__cardBodyDescription'>
-                RFQs, POs, suppliers, invoicing, and reporting with automation to cut manual workload across procurement and finance teams.
-              </p>
-            </div>
-            <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>
-                <span className='projectResp__tagBadge'>Laravel</span>
-                <span className='projectResp__tagBadge'>MySQL</span>
-                <span className='projectResp__tagBadge'>REST APIs</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li className='projectResp__items  projectResp__items2'>
-          <div className='projectResp__card'>
-            <div className='projectResp__cardTop'>
-              <svg className='projectResp__cardFolder'>
-                <use href='icons/symbol-defs.svg#icon-folder' />
-              </svg>
-            </div>
-            <div className='projectResp__cardBody'>
-              <div className='projectResp__cardBodyHeading'>Warehouse &amp; logistics (3PL)</div>
-              <p className='projectResp__cardBodyDescription'>
-                RFID-backed warehousing APIs, scheduling, role-based access, and reporting for inbound and outbound logistics.
-              </p>
-            </div>
-            <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>
-                <span className='projectResp__tagBadge'>Laravel</span>
-                <span className='projectResp__tagBadge'>RFID</span>
-                <span className='projectResp__tagBadge'>REST APIs</span>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li className='projectResp__items projectResp__items3'>
-          <div className='projectResp__card'>
-            <div className='projectResp__cardTop'>
-              <svg className='projectResp__cardFolder'>
-                <use href='icons/symbol-defs.svg#icon-folder' />
-              </svg>
-            </div>
-            <div className='projectResp__cardBody'>
-              <div className='projectResp__cardBodyHeading'>Clinic &amp; healthcare suite</div>
-              <p className='projectResp__cardBodyDescription'>
-                Multi-branch scheduling, patient records, billing, and referral analytics for clinic operations teams.
-              </p>
-            </div>
-            <div className='projectResp__cardFooter'>
-              <div className='projectResp__tags'>
-                <span className='projectResp__tagBadge'>Laravel</span>
-                <span className='projectResp__tagBadge'>MySQL</span>
-                <span className='projectResp__tagBadge'>Dashboards</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
+      {PROJECT_CARDS.length > initialVisibleCount && (
+        <div className='project__actions'>
+          <button type='button' className='project__showMore' onClick={() => setShowAll((prev) => !prev)}>
+            {showAll ? 'Show Less' : `Show More (${PROJECT_CARDS.length - initialVisibleCount})`}
+          </button>
+        </div>
+      )}
 
-      <span className='sectiontag'>&lt;/section&gt;</span>
+      {selectedProject && (
+        <div className='project__modalOverlay' role='presentation' onClick={() => setSelectedProject(null)}>
+          <div
+            className='project__modal'
+            role='dialog'
+            aria-modal='true'
+            aria-label={`${selectedProject.title} image preview`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type='button'
+              className='project__modalClose'
+              aria-label='Close image preview'
+              onClick={() => setSelectedProject(null)}
+            >
+              ×
+            </button>
+            <img className='project__modalImage' src={selectedProject.image} alt={selectedProject.imageAlt} />
+            <p className='project__modalCaption'>{selectedProject.title}</p>
+          </div>
+        </div>
+      )}
 
     </div>
   );

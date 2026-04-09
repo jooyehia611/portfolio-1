@@ -37,7 +37,6 @@ const Touch = () => {
   });
   return (
     <section className='sec' id='contact'>
-      <span className='sectiontag'>&lt;section&gt;</span>
       <div className='touch'>
 
         <label htmlFor='touchLabel' className='touch__label'>05. What&apos;s next?</label>
@@ -71,7 +70,6 @@ const Touch = () => {
         </div>
 
       </div>
-      <span className='sectiontag'>&lt;/section&gt;</span>
     </section>
 
   );
