@@ -34,6 +34,14 @@
         }
     }
 
+    &__status {
+        color: var(--lightest-slate);
+        margin: 1rem 0 2rem;
+        font-size: 1.4rem;
+
+        p { margin-bottom: 1rem; }
+    }
+
     &__card {
         background: linear-gradient(160deg, rgba(17, 34, 64, 0.98), rgba(13, 32, 58, 0.98));
         border: 1px solid rgba(204, 214, 246, 0.14);
@@ -59,7 +67,16 @@
         border-top: 0;
         width: 100%;
         display: block;
-        cursor: zoom-in;
+        cursor: pointer;
+    }
+
+    &__imageFallback {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        color: var(--lightest-slate);
+        background: #172b48;
     }
 
     &__cardImage {
@@ -77,6 +94,9 @@
 
     &__cardBody {
         padding: 1rem 1.1rem 1.15rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     &__cardTop {
@@ -93,6 +113,12 @@
         margin: 0;
         line-height: 1.28;
         letter-spacing: 0.1px;
+    }
+
+    &__year {
+        color: var(--primary);
+        white-space: nowrap;
+        font-size: 1.2rem;
     }
 
     &__summary {
@@ -126,6 +152,24 @@
         font-weight: 600;
         line-height: 1.1;
         padding: 0.34rem 0.68rem;
+    }
+
+    &__cardActions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.4rem;
+        padding-top: 0.4rem;
+
+        a, button { color: var(--primary); font-size: 1.2rem; text-decoration: none; }
+    }
+
+    &__textButton {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
     }
 
     &__actions {
@@ -175,16 +219,49 @@
         display: flex;
         flex-direction: column;
         gap: 0.85rem;
+        overflow-y: auto;
     }
 
     &__modalImage {
         width: 100%;
-        max-height: calc(90vh - 8rem);
+        max-height: 50vh;
         object-fit: contain;
         border-radius: 0.8rem;
         border: 1px solid rgba(204, 214, 246, 0.2);
         background: rgba(2, 12, 27, 0.45);
     }
+
+    &__gallery {
+        display: flex;
+        gap: 0.7rem;
+        overflow-x: auto;
+    }
+
+    &__galleryItem {
+        flex: 0 0 7rem;
+        height: 5rem;
+        padding: 0;
+        border: 2px solid transparent;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        cursor: pointer;
+        background: transparent;
+
+        &--active { border-color: var(--primary); }
+        img { width: 100%; height: 100%; object-fit: cover; }
+    }
+
+    &__modalContent {
+        color: var(--lightest-slate);
+        font-size: 1.35rem;
+        white-space: pre-line;
+
+        h2, h3 { color: var(--white); margin: 0.5rem 0; }
+        p { margin-bottom: 1rem; }
+        a { color: var(--primary); }
+    }
+
+    &__meta { color: var(--primary); }
 
     &__modalCaption {
         margin: 0;

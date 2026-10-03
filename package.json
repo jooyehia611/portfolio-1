@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "export:projects": "node scripts/export-projects.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

@@ -1,246 +1,189 @@
-import React, { useState, useEffect } from 'react';
-import './projects.scss';
-import LazyLoad from 'react-lazyload';
+import React, { useEffect, useState } from 'react';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
+import './projects.scss';
 
-type ProjectCategory = 'company' | 'freelance';
+type Media = { url: string; alt_text?: string | null } | null;
+type NamedItem = { id: number; name?: string; title?: string };
 type ProjectItem = {
+  id: number;
+  slug: string;
   title: string;
-  image: string;
-  imageAlt: string;
-  summary: string;
-  tags: string[];
-  category: ProjectCategory;
+  short_description: string | null;
+  description?: string | null;
+  client_name: string | null;
+  year: number | string | null;
+  cover: Media;
+  thumbnail: Media;
+  website_url: string | null;
+  technologies: NamedItem[];
+  services: NamedItem[];
+  gallery?: { id: number; url: string; caption: string | null }[];
+  challenge?: string | null;
+  solution?: string | null;
 };
 
-const PROJECT_CARDS: ProjectItem[] = [
-  {
-    title: 'Procurement Platform',
-    image: '/images/procurement.png',
-    imageAlt: 'Procurement platform dashboard',
-    summary: 'End-to-end procurement platform for RFQs, purchase orders, suppliers, invoicing, and reporting to streamline approvals and reduce manual operations.',
-    tags: ['Laravel', 'MySQL', 'REST APIs'],
-    category: 'company',
-  },
-  {
-    title: 'Warehouse & Logistics (3PL)',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Warehouse and logistics operations',
-    summary: 'RFID-aware 3PL workflows with APIs for inbound/outbound operations, scheduling, and operational reporting.',
-    tags: ['Laravel', 'RFID', 'REST APIs'],
-    category: 'company',
-  },
-  {
-    title: 'Clinic & Healthcare Suite',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Healthcare technology concept',
-    summary: 'Multi-branch clinic system covering scheduling, patient intake, billing, and analytics across operations teams.',
-    tags: ['Laravel', 'MySQL', 'Dashboards'],
-    category: 'company',
-  },
-  {
-    title: 'Medica Mall',
-    image: '/images/medicamall.png',
-    imageAlt: 'Medica Mall Magento 2 online medical store',
-    summary:
-      'E-commerce platform using Magento 2 for an online medical store. Handled theme customization, product management, and performance optimization.',
-    tags: ['Magento 2', 'E-commerce', 'Medical'],
-    category: 'company',
-  },
-  {
-    title: 'Souq Alat',
-    image: '/images/souqalat.png',
-    imageAlt: 'Souq Alat surgical instruments and medical supplies storefront',
-    summary:
-      'E-commerce platform using Magento 2 for a surgical instruments and medical supplies store.',
-    tags: ['Magento 2', 'E-commerce', 'Medical Supplies'],
-    category: 'company',
-  },
-  {
-    title: 'Multi-vendor Marketplace',
-    image: '/images/xshop.png',
-    imageAlt: 'Marketplace operations and order management',
-    summary: 'On-demand ordering and delivery platform with vendor/admin workflows, payment gateways, Firebase, Twilio SMS, and realtime updates.',
-    tags: ['Laravel', 'APIs', 'Realtime'],
-    category: 'freelance',
-  },
-  {
-    title: 'Real Estate Product',
-    image: '/images/real.png',
-    imageAlt: 'Real estate listings platform',
-    summary: 'Listings and broker-focused platform with search, OTP auth, favorites, referrals, wallet flows, and Sanctum-secured APIs.',
-    tags: ['Laravel', 'REST APIs', 'Sanctum'],
-    category: 'company',
-  },
-  {
-    title: 'Umrah & Hajj Booking',
-    image: '/images/haj.png',
-    imageAlt: 'Travel booking and package management',
-    summary: 'Package booking and operations system with approvals, accommodation, transport, meal planning, agents, and commissions.',
-    tags: ['Laravel', 'Booking', 'Backoffice'],
-    category: 'freelance',
-  },
-  {
-    title: 'Eyadty (Healthcare)',
-    image: '/images/misrmodern.png',
-    imageAlt: 'Eyadty healthcare platform screenshot',
-    summary: 'Modular clinic and dental practice platform centralizing day-to-day clinical and administrative workflows.',
-    tags: ['Laravel', 'Healthcare', 'Operations'],
-    category: 'freelance',
-  },
-  {
-    title: 'Property Management Platform',
-    image: '/images/property.png',
-    imageAlt: 'Property management records dashboard',
-    summary: 'Web app for real-estate record management, multi-owner structures, and legal documentation in one centralized system.',
-    tags: ['Laravel', 'Real Estate', 'Backoffice'],
-    category: 'company',
-  },
-  {
-    title: 'CarLog APIs',
-    image: 'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Fleet and vehicle tracking dashboard',
-    summary: 'REST APIs for company vehicles and equipment including user tracking, odometer monitoring, usage logs, and inspection checklists.',
-    tags: ['REST APIs', 'Laravel', 'Fleet'],
-    category: 'company',
-  },
-  {
-    title: 'Freelancers/Clients Multi-branch Platform',
-    image: '/images/easylist.png',
-    imageAlt: 'Freelancers and clients multi-branch platform dashboard',
-    summary: 'Platform for orders, transfers, referral/commission workflows, lead-source CRM, and financial dashboards for revenue and net profit.',
-    tags: ['Laravel', 'CRM', 'Dashboards'],
-    category: 'freelance',
-  },
-  {
-    title: 'Sports Membership System',
-    image: '/images/sportclub.png',
-    imageAlt: 'Sports facility membership and access control',
-    summary: 'Membership lifecycle and facility operations system with permissioned admin console, payments, and token-authenticated mobile APIs for attendance/access.',
-    tags: ['Laravel', 'APIs', 'Access Control'],
-    category: 'freelance',
-  },
-  {
-    title: 'Fitness Pioneers',
-    image: '/images/fitnesspioneers.png',
-    imageAlt: 'Fitness Pioneers training and consulting platform',
-    summary:
-      'Fitness Pioneers is a leading organization in sports training and consulting, specializing in developing fitness professionals through accredited programs in sports science and personal training, in collaboration with international bodies such as the American College of Sports Medicine and American Council on Exercise.',
-    tags: ['Sports Training', 'Consulting', 'Accredited Programs'],
-    category: 'company',
-  },
-  {
-    title: 'Venue & Dining Platform',
-    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Venue booking and dining reservations',
-    summary: 'Role-based admin platform for reservations, orders, users, and content with secure APIs (Sanctum/JWT) from auth to checkout.',
-    tags: ['Laravel', 'Sanctum/JWT', 'Reservations'],
-    category: 'company',
-  },
-];
+const configuredApi = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '').replace(/\/api\/v1$/, '');
+
+async function readProjectData(url: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
+  const response = await fetch(url, {
+    headers: { 'Accept-Language': 'en', Accept: 'application/json' },
+    signal,
+  });
+  if (!response.ok) throw new Error(`Could not load projects (HTTP ${response.status}).`);
+  const body = await response.json();
+  if (!body.success || !body.data) throw new Error('The projects data returned an invalid response.');
+  return body.data;
+}
+
+async function getProjectData(path: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
+  const snapshotPath = path ? `/project-data/details${path}.json` : '/project-data/projects.json';
+  if (configuredApi) {
+    try {
+      return await readProjectData(`${configuredApi}/api/v1/projects${path}`, signal);
+    } catch (error) {
+      if (signal.aborted) throw error;
+    }
+  }
+  return readProjectData(snapshotPath, signal);
+}
 
 const Project = () => {
   const [letterClass, setLetterClass] = useState('text-animate-fast');
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
-  const nameArray = [...'03. My Projects'];
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState('');
+  const [activeImage, setActiveImage] = useState('');
   const initialVisibleCount = 8;
 
   useEffect(() => {
-    setTimeout(() => {
-      setLetterClass('text-animate-fast-hover');
-    }, 4000);
-  });
+    const timer = window.setTimeout(() => setLetterClass('text-animate-fast-hover'), 4000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError('');
+    getProjectData('', controller.signal)
+      .then((data) => setProjects(data as ProjectItem[]))
+      .catch((cause: Error) => {
+        if (!controller.signal.aborted) setError(cause.message);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [reloadKey]);
 
   useEffect(() => {
     if (!selectedProject) return () => {};
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSelectedProject(null);
-      }
-    };
-
+    const controller = new AbortController();
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleEscape);
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedProject(null);
     };
-  }, [selectedProject]);
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onEscape);
+    setDetailLoading(true);
+    setDetailError('');
+    setActiveImage(selectedProject.cover?.url || selectedProject.thumbnail?.url || '');
+    getProjectData(`/${encodeURIComponent(selectedProject.slug)}`, controller.signal)
+      .then((data) => setSelectedProject(data as ProjectItem))
+      .catch(() => {
+        if (!controller.signal.aborted) setDetailError('More details are unavailable right now.');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setDetailLoading(false);
+      });
+    return () => {
+      controller.abort();
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onEscape);
+    };
+  // Fetch only when a new project is opened, not when its details replace the summary.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProject?.slug]);
 
-  const visibleProjects = showAll ? PROJECT_CARDS : PROJECT_CARDS.slice(0, initialVisibleCount);
+  const visibleProjects = showAll ? projects : projects.slice(0, initialVisibleCount);
+  const selectedImages = selectedProject
+    ? [selectedProject.cover?.url || selectedProject.thumbnail?.url, ...(selectedProject.gallery || []).map((item) => item.url)]
+      .filter((url): url is string => Boolean(url))
+    : [];
+
   return (
-    <div className='project' id='projects'>
+    <section className='project' id='projects'>
       <h1 className='about__headingPrimary'>
-        <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
+        <AnimatedLettersFast letterClass={letterClass} strArray={[...'03. My Projects']} idx={15} />
       </h1>
-      <p className='project__lede'>
-        Interactive 3D project showcase across company and freelance work. Hover any card to reveal stack, context, and delivery focus.
-      </p>
+
+      {loading && <p className='project__status' role='status'>Loading projects…</p>}
+      {!loading && error && (
+        <div className='project__status' role='alert'>
+          <p>{error}</p>
+          <button type='button' className='project__showMore' onClick={() => setReloadKey((key) => key + 1)}>Try again</button>
+        </div>
+      )}
+      {!loading && !error && projects.length === 0 && <p className='project__status'>No published projects yet.</p>}
 
       <div className='project__deck'>
-        {visibleProjects.map((card, index) => (
-          <LazyLoad once height={330} key={card.title}>
-            <article className='project__card' style={{ animationDelay: `${index * 55}ms` }}>
-              <button
-                type='button'
-                className='project__cardMedia'
-                onClick={() => setSelectedProject(card)}
-                aria-label={`Open ${card.title} image`}
-              >
-                <img className='project__cardImage' src={card.image} alt={card.imageAlt} />
+        {visibleProjects.map((card, index) => {
+          const image = card.cover || card.thumbnail;
+          const tags = [...card.technologies.map((item) => item.name), ...card.services.map((item) => item.title)].filter(Boolean);
+          return (
+            <article className='project__card' key={card.id} style={{ animationDelay: `${index * 55}ms` }}>
+              <button type='button' className='project__cardMedia' onClick={() => setSelectedProject(card)} aria-label={`View ${card.title} details`}>
+                {image?.url ? <img className='project__cardImage' src={image.url} alt={image.alt_text || card.title} loading='lazy' /> : <span className='project__imageFallback'>Project image</span>}
               </button>
               <div className='project__cardBody'>
                 <div className='project__cardTop'>
                   <h3 className='project__title'>{card.title}</h3>
+                  {card.year && <span className='project__year'>{card.year}</span>}
                 </div>
-                <p className='project__summary'>{card.summary}</p>
-                <div className='project__tags'>
-                  {card.tags.map((tag) => (
-                    <span key={`${card.title}-${tag}`} className='project__tagBadge'>{tag}</span>
-                  ))}
+                {card.short_description && <p className='project__summary'>{card.short_description}</p>}
+                {tags.length > 0 && <div className='project__tags'>{tags.map((tag) => <span key={tag} className='project__tagBadge'>{tag}</span>)}</div>}
+                <div className='project__cardActions'>
+                  <button type='button' className='project__textButton' onClick={() => setSelectedProject(card)}>View details →</button>
+                  {card.website_url && <a href={card.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
                 </div>
               </div>
             </article>
-          </LazyLoad>
-        ))}
+          );
+        })}
       </div>
 
-      {PROJECT_CARDS.length > initialVisibleCount && (
+      {projects.length > initialVisibleCount && (
         <div className='project__actions'>
           <button type='button' className='project__showMore' onClick={() => setShowAll((prev) => !prev)}>
-            {showAll ? 'Show Less' : `Show More (${PROJECT_CARDS.length - initialVisibleCount})`}
+            {showAll ? 'Show Less' : `Show More (${projects.length - initialVisibleCount})`}
           </button>
         </div>
       )}
 
       {selectedProject && (
         <div className='project__modalOverlay' role='presentation' onClick={() => setSelectedProject(null)}>
-          <div
-            className='project__modal'
-            role='dialog'
-            aria-modal='true'
-            aria-label={`${selectedProject.title} image preview`}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              type='button'
-              className='project__modalClose'
-              aria-label='Close image preview'
-              onClick={() => setSelectedProject(null)}
-            >
-              ×
-            </button>
-            <img className='project__modalImage' src={selectedProject.image} alt={selectedProject.imageAlt} />
-            <p className='project__modalCaption'>{selectedProject.title}</p>
+          <div className='project__modal' role='dialog' aria-modal='true' aria-label={`${selectedProject.title} details`} onClick={(event) => event.stopPropagation()}>
+            <button type='button' className='project__modalClose' aria-label='Close project details' onClick={() => setSelectedProject(null)}>×</button>
+            {activeImage && <img className='project__modalImage' src={activeImage} alt={selectedProject.title} />}
+            {selectedImages.length > 1 && <div className='project__gallery'>{selectedImages.map((url, index) => <button type='button' className={url === activeImage ? 'project__galleryItem project__galleryItem--active' : 'project__galleryItem'} key={`${url}-${index}`} onClick={() => setActiveImage(url)} aria-label={`Show project image ${index + 1}`}><img src={url} alt='' loading='lazy' /></button>)}</div>}
+            <div className='project__modalContent'>
+              <h2>{selectedProject.title}</h2>
+              {(selectedProject.client_name || selectedProject.year) && <p className='project__meta'>{[selectedProject.client_name, selectedProject.year].filter(Boolean).join(' · ')}</p>}
+              <p>{selectedProject.description || selectedProject.short_description}</p>
+              {selectedProject.challenge && <div><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
+              {selectedProject.solution && <div><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
+              {detailLoading && <p role='status'>Loading details…</p>}
+              {detailError && <p role='alert'>{detailError}</p>}
+              {selectedProject.website_url && <a href={selectedProject.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
+            </div>
           </div>
         </div>
       )}
-
-    </div>
+    </section>
   );
 };
 
