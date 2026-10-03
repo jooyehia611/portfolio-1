@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
 import projectsSnapshot from '../../data/projects.json';
 import './projects.scss';
@@ -178,7 +179,7 @@ const Project = () => {
         </div>
       )}
 
-      {selectedProject && (
+      {selectedProject && createPortal((
         <div className='project__modalOverlay' role='presentation' onClick={() => setSelectedProject(null)}>
           <div className='project__modal' role='dialog' aria-modal='true' aria-label={`${selectedProject.title} details`} onClick={(event) => event.stopPropagation()}>
             <button type='button' className='project__modalClose' aria-label='Close project details' onClick={() => setSelectedProject(null)}>×</button>
@@ -209,7 +210,7 @@ const Project = () => {
             </div>
           </div>
         </div>
-      )}
+      ), document.body)}
     </section>
   );
 };
