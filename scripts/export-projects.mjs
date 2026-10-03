@@ -4,6 +4,7 @@ import { extname, join } from 'node:path';
 
 const source = (process.env.PROJECTS_EXPORT_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
 const output = join(process.cwd(), 'public', 'project-data');
+const bundledOutput = join(process.cwd(), 'src', 'data');
 const mediaDir = join(output, 'media');
 const copiedMedia = new Map();
 
@@ -49,12 +50,17 @@ async function localizeProject(project) {
 
 await mkdir(mediaDir, { recursive: true });
 await mkdir(join(output, 'details'), { recursive: true });
+await mkdir(join(bundledOutput, 'details'), { recursive: true });
 const list = await readApi('');
 for (const project of list.data) {
   const detail = await readApi(`/${encodeURIComponent(project.slug)}`);
   await localizeProject(project);
   await localizeProject(detail.data);
-  await writeFile(join(output, 'details', `${project.slug}.json`), JSON.stringify(detail));
+  const detailJson = JSON.stringify(detail);
+  await writeFile(join(output, 'details', `${project.slug}.json`), detailJson);
+  await writeFile(join(bundledOutput, 'details', `${project.slug}.json`), detailJson);
 }
-await writeFile(join(output, 'projects.json'), JSON.stringify(list));
+const listJson = JSON.stringify(list);
+await writeFile(join(output, 'projects.json'), listJson);
+await writeFile(join(bundledOutput, 'projects.json'), listJson);
 console.log(`Exported ${list.data.length} projects and ${copiedMedia.size} images to public/project-data`);

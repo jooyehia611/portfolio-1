@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
+import projectsSnapshot from '../../data/projects.json';
 import './projects.scss';
 
 type Media = { url: string; alt_text?: string | null } | null;
@@ -27,6 +28,15 @@ type ProjectItem = {
 const configuredApi = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '').replace(/\/api\/v1$/, '');
 // InfinityFree free hosting serves a browser challenge instead of JSON to external sites.
 const apiBase = configuredApi?.includes('.infinityfreeapp.com') ? '' : configuredApi;
+const detailSnapshots = import.meta.glob<{ default: { data: ProjectItem } }>('../../data/details/*.json', { eager: true });
+
+function getSnapshot(path: string): ProjectItem | ProjectItem[] {
+  if (!path) return projectsSnapshot.data as ProjectItem[];
+  const slug = decodeURIComponent(path.slice(1));
+  const detail = detailSnapshots[`../../data/details/${slug}.json`];
+  if (!detail) throw new Error(`Project details are unavailable for ${slug}.`);
+  return detail.default.data;
+}
 
 async function readProjectData(url: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
   const response = await fetch(url, {
@@ -40,7 +50,6 @@ async function readProjectData(url: string, signal: AbortSignal): Promise<Projec
 }
 
 async function getProjectData(path: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
-  const snapshotPath = path ? `/project-data/details${path}.json` : '/project-data/projects.json';
   if (apiBase) {
     try {
       return await readProjectData(`${apiBase}/api/v1/projects${path}`, signal);
@@ -48,14 +57,14 @@ async function getProjectData(path: string, signal: AbortSignal): Promise<Projec
       if (signal.aborted) throw error;
     }
   }
-  return readProjectData(snapshotPath, signal);
+  return getSnapshot(path);
 }
 
 const Project = () => {
   const [letterClass, setLetterClass] = useState('text-animate-fast');
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>(projectsSnapshot.data as ProjectItem[]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
@@ -70,6 +79,7 @@ const Project = () => {
   }, []);
 
   useEffect(() => {
+    if (!apiBase) return () => {};
     const controller = new AbortController();
     setLoading(true);
     setError('');

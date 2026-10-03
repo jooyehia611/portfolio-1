@@ -1,7 +1,8 @@
 # Projects on Vercel
 
 The projects section reads published projects and details from Laravel. In
-production it currently uses the exported snapshot in `public/project-data`.
+production it currently uses the exported snapshot bundled from `src/data`.
+The export also writes JSON to `public/project-data` for inspection.
 The export includes project images, so Vercel can serve them without calling
 the backend. The frontend sends `Accept-Language: en` when using the API.
 
@@ -28,7 +29,8 @@ projects as a fallback.
 1. Make the changes in Laravel and ensure the projects are published.
 2. Run the local Laravel server as above.
 3. Run `npm run export:projects` in this frontend.
-4. Commit the changed `public/project-data` files and redeploy Vercel.
+4. Commit the changed `src/data` and `public/project-data` files and
+   redeploy Vercel.
 
 The export reads both project endpoints, copies all referenced images, and
 fails if it receives HTML instead of JSON. The deployed project list is a
