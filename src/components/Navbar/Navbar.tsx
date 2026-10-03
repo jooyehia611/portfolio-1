@@ -37,7 +37,7 @@ const Navbar = () => (
           </HashLink>
         </li>
       </ul>
-      <a href='/cv-yousef-yehia.pdf' target='_blank' rel='noreferrer' className='navbar__button'>Resume</a>
+      <a href='/Senior Backend Developer (PHP - Laravel).pdf' target='_blank' rel='noreferrer' className='navbar__button'>Resume</a>
     </div>
   </nav>
 );

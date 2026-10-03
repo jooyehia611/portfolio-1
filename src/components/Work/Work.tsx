@@ -78,16 +78,20 @@ const ROLES: Role[] = [
 
 const Work = () => {
   const [letterClass, setLetterClass] = useState('text-animate-fast');
+  const [activeRole, setActiveRole] = useState(0);
   const nameArray = [...'02. Work Experience'];
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = window.setTimeout(() => {
       setLetterClass('text-animate-fast-hover');
     }, 4000);
-  });
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const role = ROLES[activeRole];
 
   return (
-    <div className='work' id='work'>
+    <section className='work' id='work'>
       <span className='sectiontag'>&lt;section&gt;</span>
       <h1 className='about__headingPrimary'>
         <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
@@ -95,27 +99,49 @@ const Work = () => {
       <p className='work__lede'>
         Backend and full-stack engineer delivering scalable Laravel platforms, secure REST APIs, and high-impact e-commerce solutions across healthcare, logistics, and enterprise domains.
       </p>
-      <ol className='work__timeline'>
-        {ROLES.map((role) => (
-          <li key={`${role.company}-${role.period}`} className='work__item'>
-            <div className='work__marker' aria-hidden />
-            <div className='work__card'>
-              <div className='work__cardHeader'>
-                <h2 className='work__title'>{role.title}</h2>
-                {role.company && <span className='work__company'>{role.company}</span>}
-                <span className='work__period'>{role.period}</span>
-              </div>
-              <ul className='work__bullets'>
-                {role.bullets.map((b, i) => (
-                  <li key={`${role.company}-${i}`}>{b}</li>
-                ))}
-              </ul>
+      <div className='work__experience'>
+        <div className='work__roleList' role='tablist' aria-label='Work experience'>
+          {ROLES.map((item, index) => (
+            <button
+              type='button'
+              role='tab'
+              id={`work-tab-${index}`}
+              aria-controls='work-panel'
+              aria-selected={activeRole === index}
+              tabIndex={activeRole === index ? 0 : -1}
+              className={`work__role${activeRole === index ? ' work__role--active' : ''}`}
+              key={`${item.company}-${item.period}`}
+              onClick={() => setActiveRole(index)}
+              onKeyDown={(event) => {
+                if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp' && event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+                event.preventDefault();
+                const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+                const next = (index + direction + ROLES.length) % ROLES.length;
+                setActiveRole(next);
+                document.getElementById(`work-tab-${next}`)?.focus();
+              }}
+            >
+              <span className='work__roleCompany'>{item.company || 'Freelance'}</span>
+              <span className='work__rolePeriod'>{item.period}</span>
+            </button>
+          ))}
+        </div>
+        <div className='work__panel' id='work-panel' role='tabpanel' aria-labelledby={`work-tab-${activeRole}`} tabIndex={0}>
+          <div className='work__panelHead'>
+            <div>
+              <span className='work__panelLabel'>Experience / {String(activeRole + 1).padStart(2, '0')}</span>
+              <h2 className='work__title'>{role.title}</h2>
+              <p className='work__company'>{role.company || 'Independent practice'}</p>
             </div>
-          </li>
-        ))}
-      </ol>
+            <span className='work__period'>{role.period}</span>
+          </div>
+          <ul className='work__bullets'>
+            {role.bullets.map((bullet, index) => <li key={`${role.company}-${index}`}>{bullet}</li>)}
+          </ul>
+        </div>
+      </div>
       <span className='sectiontag'>&lt;/section&gt;</span>
-    </div>
+    </section>
   );
 };
 

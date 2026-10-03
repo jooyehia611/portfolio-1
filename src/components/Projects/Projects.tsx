@@ -18,6 +18,7 @@ type ProjectItem = {
   cover: Media;
   thumbnail: Media;
   website_url: string | null;
+  is_featured?: boolean;
   technologies: NamedItem[];
   services: NamedItem[];
   gallery?: { id: number; url: string; caption: string | null }[];
@@ -124,7 +125,8 @@ const Project = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProject?.slug]);
 
-  const visibleProjects = showAll ? projects : projects.slice(0, initialVisibleCount);
+  const orderedProjects = [...projects].sort((a, b) => Number(Boolean(b.is_featured)) - Number(Boolean(a.is_featured)));
+  const visibleProjects = showAll ? orderedProjects : orderedProjects.slice(0, initialVisibleCount);
   const selectedImages = selectedProject
     ? [selectedProject.cover?.url || selectedProject.thumbnail?.url, ...(selectedProject.gallery || []).map((item) => item.url)]
       .filter((url): url is string => Boolean(url))
@@ -135,6 +137,10 @@ const Project = () => {
       <h1 className='about__headingPrimary'>
         <AnimatedLettersFast letterClass={letterClass} strArray={[...'03. My Projects']} idx={15} />
       </h1>
+      <div className='project__intro'>
+        <p className='project__lede'>Selected platforms and products built for real operational needs, from enterprise systems to customer-facing experiences.</p>
+        <span className='project__count'>{`${String(projects.length).padStart(2, '0')} projects`}</span>
+      </div>
 
       {loading && <p className='project__status' role='status'>Loading projects…</p>}
       {!loading && error && (
@@ -145,22 +151,24 @@ const Project = () => {
       )}
       {!loading && !error && projects.length === 0 && <p className='project__status'>No published projects yet.</p>}
 
-      <div className='project__deck'>
+      <div className='project__list'>
         {visibleProjects.map((card, index) => {
           const image = card.cover || card.thumbnail;
           const tags = [...card.technologies.map((item) => item.name), ...card.services.map((item) => item.title)].filter(Boolean);
           return (
-            <article className='project__card' key={card.id} style={{ animationDelay: `${index * 55}ms` }}>
+            <article className='project__entry' key={card.id}>
+              <span className='project__number'>{String(index + 1).padStart(2, '0')}</span>
               <button type='button' className='project__cardMedia' onClick={() => setSelectedProject(card)} aria-label={`View ${card.title} details`}>
                 {image?.url ? <img className='project__cardImage' src={image.url} alt={image.alt_text || card.title} loading='lazy' /> : <span className='project__imageFallback'>Project image</span>}
               </button>
               <div className='project__cardBody'>
-                <div className='project__cardTop'>
-                  <h3 className='project__title'>{card.title}</h3>
-                  {card.year && <span className='project__year'>{card.year}</span>}
+                <div className='project__eyebrow'>
+                  <span>{card.is_featured ? 'Featured project' : 'Selected work'}</span>
+                  {card.year && <span>{card.year}</span>}
                 </div>
+                <h3 className='project__title'>{card.title}</h3>
                 {card.short_description && <p className='project__summary'>{card.short_description}</p>}
-                {tags.length > 0 && <div className='project__tags'>{tags.map((tag) => <span key={tag} className='project__tagBadge'>{tag}</span>)}</div>}
+                {tags.length > 0 && <div className='project__tags'>{tags.slice(0, 4).map((tag) => <span key={tag} className='project__tagBadge'>{tag}</span>)}</div>}
                 <div className='project__cardActions'>
                   <button type='button' className='project__textButton' onClick={() => setSelectedProject(card)}>View details →</button>
                   {card.website_url && <a href={card.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
