@@ -23,6 +23,8 @@ type ProjectItem = {
 };
 
 const configuredApi = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '').replace(/\/api\/v1$/, '');
+// InfinityFree free hosting serves a browser challenge instead of JSON to external sites.
+const apiBase = configuredApi?.includes('.infinityfreeapp.com') ? '' : configuredApi;
 
 async function readProjectData(url: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
   const response = await fetch(url, {
@@ -37,9 +39,9 @@ async function readProjectData(url: string, signal: AbortSignal): Promise<Projec
 
 async function getProjectData(path: string, signal: AbortSignal): Promise<ProjectItem | ProjectItem[]> {
   const snapshotPath = path ? `/project-data/details${path}.json` : '/project-data/projects.json';
-  if (configuredApi) {
+  if (apiBase) {
     try {
-      return await readProjectData(`${configuredApi}/api/v1/projects${path}`, signal);
+      return await readProjectData(`${apiBase}/api/v1/projects${path}`, signal);
     } catch (error) {
       if (signal.aborted) throw error;
     }
