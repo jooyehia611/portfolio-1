@@ -263,6 +263,27 @@
 
     &__meta { color: var(--primary); }
 
+    &__features {
+        margin: 1.5rem 0;
+    }
+
+    &__featureGroups {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+        gap: 1rem;
+    }
+
+    &__featureGroup {
+        padding: 1rem 1.2rem;
+        border: 1px solid rgba(204, 214, 246, 0.16);
+        border-radius: 0.7rem;
+        background: rgba(2, 12, 27, 0.28);
+
+        h4 { color: var(--primary); margin: 0 0 0.6rem; }
+        ul { margin: 0; padding-left: 1.5rem; white-space: normal; }
+        li { margin: 0.35rem 0; line-height: 1.5; }
+    }
+
     &__modalCaption {
         margin: 0;
         color: var(--lightest-slate);

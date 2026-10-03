@@ -4,6 +4,7 @@ import './projects.scss';
 
 type Media = { url: string; alt_text?: string | null } | null;
 type NamedItem = { id: number; name?: string; title?: string };
+type FeatureGroup = { title: string | null; points: string[] };
 type ProjectItem = {
   id: number;
   slug: string;
@@ -20,6 +21,7 @@ type ProjectItem = {
   gallery?: { id: number; url: string; caption: string | null }[];
   challenge?: string | null;
   solution?: string | null;
+  key_features?: FeatureGroup[] | null;
 };
 
 const configuredApi = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '').replace(/\/api\/v1$/, '');
@@ -178,6 +180,19 @@ const Project = () => {
               <p>{selectedProject.description || selectedProject.short_description}</p>
               {selectedProject.challenge && <div><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
               {selectedProject.solution && <div><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
+              {selectedProject.key_features && selectedProject.key_features.length > 0 && (
+                <section className='project__features' aria-label='Key features'>
+                  <h3>Key features</h3>
+                  <div className='project__featureGroups'>
+                    {selectedProject.key_features.map((group, index) => (
+                      <div className='project__featureGroup' key={`${group.title || 'features'}-${index}`}>
+                        {group.title && <h4>{group.title}</h4>}
+                        <ul>{group.points.map((point, pointIndex) => <li key={`${point}-${pointIndex}`}>{point}</li>)}</ul>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
               {detailLoading && <p role='status'>Loading details…</p>}
               {detailError && <p role='alert'>{detailError}</p>}
               {selectedProject.website_url && <a href={selectedProject.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
