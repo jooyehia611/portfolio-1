@@ -6,6 +6,7 @@ import './projects.scss';
 import { useLocale } from '../../i18n/Locale';
 import { projectsAr } from '../../i18n/projects-ar';
 import { projectDetailsAr } from '../../i18n/project-details-ar';
+import { keyFeaturesAr } from '../../i18n/key-features-ar';
 
 type Media = { url: string; alt_text?: string | null } | null;
 type NamedItem = { id: number; name?: string; title?: string };
@@ -77,6 +78,7 @@ const Project = () => {
   const [showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const details = selectedProject ? projectDetailsAr[selectedProject.slug] : null;
+  const arFeatures = selectedProject ? keyFeaturesAr[selectedProject.slug] : null;
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
   const [activeImage, setActiveImage] = useState('');
@@ -212,10 +214,22 @@ const Project = () => {
               {ar && details && <>
                 <div><h3>التحدي</h3><p>{details.challenge}</p></div>
                 <div><h3>الحل</h3><p>{details.solution}</p></div>
-                <section className='project__features' aria-label='الخصائص الأساسية'>
-                  <h3>الخصائص الأساسية</h3>
-                  <ul className='project__featuresArabic'>{details.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-                </section>
+                {arFeatures ? (
+                  <section className='project__features'>
+                    <div className='project__featureGroups'>
+                      {arFeatures.map(([title, points], index) => (
+                        <div className='project__featureGroup' key={`${title || 'features'}-${index}`}>
+                          {title && <h4>{title}</h4>}
+                          <ul>{points.map((point, pointIndex) => <li key={`${point}-${pointIndex}`}>{point}</li>)}</ul>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : (
+                  <section className='project__features'>
+                    <ul className='project__featuresArabic'>{details.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+                  </section>
+                )}
               </>}
               {!ar && selectedProject.challenge && <div><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
               {!ar && selectedProject.solution && <div><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
