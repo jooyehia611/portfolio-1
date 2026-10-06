@@ -276,6 +276,15 @@
         margin: 1.5rem 0;
     }
 
+    &__featuresArabic {
+        display: grid;
+        gap: 0.65rem;
+        margin: 0.7rem 0 0;
+        padding-inline-start: 1.8rem;
+        white-space: normal;
+        line-height: 1.8;
+    }
+
     &__featureGroups {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));

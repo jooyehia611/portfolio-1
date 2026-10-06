@@ -5,6 +5,7 @@ import projectsSnapshot from '../../data/projects.json';
 import './projects.scss';
 import { useLocale } from '../../i18n/Locale';
 import { projectsAr } from '../../i18n/projects-ar';
+import { projectDetailsAr } from '../../i18n/project-details-ar';
 
 type Media = { url: string; alt_text?: string | null } | null;
 type NamedItem = { id: number; name?: string; title?: string };
@@ -75,10 +76,10 @@ const Project = () => {
   const [reloadKey, setReloadKey] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const details = selectedProject ? projectDetailsAr[selectedProject.slug] : null;
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
   const [activeImage, setActiveImage] = useState('');
-  const [showOriginalDetails, setShowOriginalDetails] = useState(false);
   const initialVisibleCount = 8;
 
   useEffect(() => {
@@ -118,7 +119,6 @@ const Project = () => {
     window.addEventListener('keydown', onEscape);
     setDetailLoading(true);
     setDetailError('');
-    setShowOriginalDetails(false);
     setActiveImage(selectedProject.cover?.url || selectedProject.thumbnail?.url || '');
     (ar ? Promise.resolve(getSnapshot(`/${encodeURIComponent(selectedProject.slug)}`)) : getProjectData(`/${encodeURIComponent(selectedProject.slug)}`, controller.signal))
       .then((data) => setSelectedProject(data as ProjectItem))
@@ -208,12 +208,18 @@ const Project = () => {
             <div className='project__modalContent'>
               <h2>{ar ? copy(selectedProject)?.title || selectedProject.title : selectedProject.title}</h2>
               {(selectedProject.client_name || selectedProject.year) && <p className='project__meta'>{[selectedProject.client_name, selectedProject.year].filter(Boolean).join(' · ')}</p>}
-              <p>{ar ? copy(selectedProject)?.description || selectedProject.short_description : selectedProject.description || selectedProject.short_description}</p>
-              {ar && (selectedProject.challenge || selectedProject.solution || selectedProject.key_features?.length) ? <button type='button' className='project__textButton' onClick={() => setShowOriginalDetails((value) => !value)}>{showOriginalDetails ? 'إخفاء التفاصيل الإنجليزية' : 'عرض التفاصيل الإضافية بالإنجليزية'}</button> : null}
-              {ar && showOriginalDetails && selectedProject.description && <p lang='en' dir='ltr'>{selectedProject.description}</p>}
-              {(!ar || showOriginalDetails) && selectedProject.challenge && <div lang='en' dir='ltr'><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
-              {(!ar || showOriginalDetails) && selectedProject.solution && <div lang='en' dir='ltr'><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
-              {(!ar || showOriginalDetails) && selectedProject.key_features && selectedProject.key_features.length > 0 && (
+              <p>{ar ? details?.description || copy(selectedProject)?.description || selectedProject.short_description : selectedProject.description || selectedProject.short_description}</p>
+              {ar && details && <>
+                <div><h3>التحدي</h3><p>{details.challenge}</p></div>
+                <div><h3>الحل</h3><p>{details.solution}</p></div>
+                <section className='project__features' aria-label='الخصائص الأساسية'>
+                  <h3>الخصائص الأساسية</h3>
+                  <ul className='project__featuresArabic'>{details.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+                </section>
+              </>}
+              {!ar && selectedProject.challenge && <div><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
+              {!ar && selectedProject.solution && <div><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
+              {!ar && selectedProject.key_features && selectedProject.key_features.length > 0 && (
                 <section className='project__features' aria-label='Key features' lang='en' dir='ltr'>
                   <h3>Key features</h3>
                   <div className='project__featureGroups'>

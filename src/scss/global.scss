@@ -79,6 +79,7 @@ html[lang='ar'] .touch__contactValue { direction: ltr; unicode-bidi: isolate; }
 @media (max-width: 900px) {
   html[lang='ar'] .work__roleList { border-right: 0; }
   html[lang='ar'] .work__role { border-right: 0; margin-right: 0; }
+  html[lang='ar'] .intro__right { overflow: hidden; width: 100%; }
 }
 
 
