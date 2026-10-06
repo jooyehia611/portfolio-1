@@ -298,8 +298,9 @@
         background: rgba(2, 12, 27, 0.28);
 
         h4 { color: var(--primary); margin: 0 0 0.6rem; }
-        ul { margin: 0; padding-left: 1.5rem; white-space: normal; }
-        li { margin: 0.35rem 0; line-height: 1.5; }
+        ul { margin: 0; padding-inline-start: 1.5rem; padding-inline-end: 0; white-space: normal; list-style-position: outside; }
+        li { margin: 0.35rem 0; line-height: 1.5; text-align: start; }
+        li::marker { color: var(--primary); }
     }
 
     &__modalCaption {
