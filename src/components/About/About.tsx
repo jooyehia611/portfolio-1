@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedLettersFast from '../AnimatedLettersFast/AnimatedLettersFast';
 import './about.scss';
+import { useLocale } from '../../i18n/Locale';
 
 const About = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
   const [letterClass, setLetterClass] = useState('text-animate-fast');
   const nameArray = [...'01. About Me'];
 
@@ -16,9 +19,13 @@ const About = () => {
       <div className='about__left'>
         <span className='sectiontag'>&lt;section&gt;</span>
         <h1 className='about__headingPrimary'>
-          <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
+          {ar ? '01. نبذة عني' : <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />}
         </h1>
         <div className='about__description'>
+          {ar ? <>
+            أهلًا، أنا <span className='about__link'>يوسف يحيى عبد النبي</span>. مطور Backend بخبرة في بناء تطبيقات ويب قابلة للتوسع وصيانتها باستخدام PHP وLaravel، إلى جانب Magento 2 وWordPress. أطور واجهات API آمنة، وأحسن أداء قواعد البيانات، وأعيد تنظيم الشفرة القديمة لتصبح أسرع وأسهل صيانة. أعمل ضمن فرق Agile وأهتم ببنية البرمجيات النظيفة والأداء والموثوقية.
+            <br /><br />حاصل على بكالوريوس علوم الحاسب من <a href='https://www.o6u.edu.eg/' target='_blank' rel='noreferrer' className='intro__link'>جامعة 6 أكتوبر</a> عام 2022. من التقنيات والممارسات التي أستخدمها بانتظام:
+          </> : <>
           Hello! My name is
           {' '}
           <span className='about__link'>Yousef Yehia Abd Elnaby</span>
@@ -36,6 +43,7 @@ applications.
           <a href='https://www.o6u.edu.eg/' target='_blank' rel='noreferrer' className='intro__link'>6th of October University</a>
           {' '}
           (2022). Here are technologies and practices I use regularly:
+          </>}
           {' '}
           <br />
           <ul className='about__skillsList'>
@@ -46,9 +54,9 @@ applications.
             <li className='about__skillsItems'>Magento 2</li>
             <li className='about__skillsItems'>WordPress</li>
             <li className='about__skillsItems'>Python</li>
-            <li className='about__skillsItems'>Agile &amp; clean architecture</li>
-            <li className='about__skillsItems'>Server management</li>
-            <li className='about__skillsItems'>Frontend Development</li>
+            <li className='about__skillsItems'>{ar ? 'العمل بأسلوب Agile والبنية النظيفة' : 'Agile & clean architecture'}</li>
+            <li className='about__skillsItems'>{ar ? 'إدارة الخوادم' : 'Server management'}</li>
+            <li className='about__skillsItems'>{ar ? 'تطوير واجهات المستخدم' : 'Frontend Development'}</li>
 
           </ul>
         </div>

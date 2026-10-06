@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
 import projectsSnapshot from '../../data/projects.json';
 import './projects.scss';
+import { useLocale } from '../../i18n/Locale';
+import { projectsAr } from '../../i18n/projects-ar';
 
 type Media = { url: string; alt_text?: string | null } | null;
 type NamedItem = { id: number; name?: string; title?: string };
@@ -63,6 +65,9 @@ async function getProjectData(path: string, signal: AbortSignal): Promise<Projec
 }
 
 const Project = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
+  const copy = (item: ProjectItem) => projectsAr[item.slug];
   const [letterClass, setLetterClass] = useState('text-animate-fast');
   const [projects, setProjects] = useState<ProjectItem[]>(projectsSnapshot.data as ProjectItem[]);
   const [error, setError] = useState('');
@@ -73,6 +78,7 @@ const Project = () => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
   const [activeImage, setActiveImage] = useState('');
+  const [showOriginalDetails, setShowOriginalDetails] = useState(false);
   const initialVisibleCount = 8;
 
   useEffect(() => {
@@ -81,7 +87,12 @@ const Project = () => {
   }, []);
 
   useEffect(() => {
-    if (!apiBase) return () => {};
+    if (!apiBase || ar) {
+      setProjects(projectsSnapshot.data as ProjectItem[]);
+      setError('');
+      setLoading(false);
+      return () => {};
+    }
     const controller = new AbortController();
     setLoading(true);
     setError('');
@@ -94,7 +105,7 @@ const Project = () => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [reloadKey]);
+  }, [reloadKey, ar]);
 
   useEffect(() => {
     if (!selectedProject) return () => {};
@@ -107,8 +118,9 @@ const Project = () => {
     window.addEventListener('keydown', onEscape);
     setDetailLoading(true);
     setDetailError('');
+    setShowOriginalDetails(false);
     setActiveImage(selectedProject.cover?.url || selectedProject.thumbnail?.url || '');
-    getProjectData(`/${encodeURIComponent(selectedProject.slug)}`, controller.signal)
+    (ar ? Promise.resolve(getSnapshot(`/${encodeURIComponent(selectedProject.slug)}`)) : getProjectData(`/${encodeURIComponent(selectedProject.slug)}`, controller.signal))
       .then((data) => setSelectedProject(data as ProjectItem))
       .catch(() => {
         if (!controller.signal.aborted) setDetailError('More details are unavailable right now.');
@@ -123,7 +135,7 @@ const Project = () => {
     };
   // Fetch only when a new project is opened, not when its details replace the summary.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProject?.slug]);
+  }, [selectedProject?.slug, ar]);
 
   const orderedProjects = [...projects].sort((a, b) => Number(Boolean(b.is_featured)) - Number(Boolean(a.is_featured)));
   const visibleProjects = showAll ? orderedProjects : orderedProjects.slice(0, initialVisibleCount);
@@ -135,21 +147,21 @@ const Project = () => {
   return (
     <section className='project' id='projects'>
       <h1 className='about__headingPrimary'>
-        <AnimatedLettersFast letterClass={letterClass} strArray={[...'03. My Projects']} idx={15} />
+        {ar ? '03. مشاريعي' : <AnimatedLettersFast letterClass={letterClass} strArray={[...'03. My Projects']} idx={15} />}
       </h1>
       <div className='project__intro'>
-        <p className='project__lede'>Selected platforms and products built for real operational needs, from enterprise systems to customer-facing experiences.</p>
-        <span className='project__count'>{`${String(projects.length).padStart(2, '0')} projects`}</span>
+        <p className='project__lede'>{ar ? 'منصات ومنتجات صُممت لاحتياجات تشغيلية حقيقية، من أنظمة الشركات إلى تجارب العملاء.' : 'Selected platforms and products built for real operational needs, from enterprise systems to customer-facing experiences.'}</p>
+        <span className='project__count'>{`${String(projects.length).padStart(2, '0')} ${ar ? 'مشروعًا' : 'projects'}`}</span>
       </div>
 
-      {loading && <p className='project__status' role='status'>Loading projects…</p>}
+      {loading && <p className='project__status' role='status'>{ar ? 'جاري تحميل المشاريع…' : 'Loading projects…'}</p>}
       {!loading && error && (
         <div className='project__status' role='alert'>
-          <p>{error}</p>
-          <button type='button' className='project__showMore' onClick={() => setReloadKey((key) => key + 1)}>Try again</button>
+          <p>{ar ? 'تعذر تحميل المشاريع.' : error}</p>
+          <button type='button' className='project__showMore' onClick={() => setReloadKey((key) => key + 1)}>{ar ? 'حاول مجددًا' : 'Try again'}</button>
         </div>
       )}
-      {!loading && !error && projects.length === 0 && <p className='project__status'>No published projects yet.</p>}
+      {!loading && !error && projects.length === 0 && <p className='project__status'>{ar ? 'لا توجد مشاريع منشورة بعد.' : 'No published projects yet.'}</p>}
 
       <div className='project__list'>
         {visibleProjects.map((card, index) => {
@@ -158,20 +170,20 @@ const Project = () => {
           return (
             <article className='project__entry' key={card.id}>
               <span className='project__number'>{String(index + 1).padStart(2, '0')}</span>
-              <button type='button' className='project__cardMedia' onClick={() => setSelectedProject(card)} aria-label={`View ${card.title} details`}>
-                {image?.url ? <img className='project__cardImage' src={image.url} alt={image.alt_text || card.title} loading='lazy' /> : <span className='project__imageFallback'>Project image</span>}
+              <button type='button' className='project__cardMedia' onClick={() => setSelectedProject(card)} aria-label={ar ? `عرض تفاصيل ${copy(card)?.title || card.title}` : `View ${card.title} details`}>
+                {image?.url ? <img className='project__cardImage' src={image.url} alt={ar ? copy(card)?.title || card.title : image.alt_text || card.title} loading='lazy' /> : <span className='project__imageFallback'>{ar ? 'صورة المشروع' : 'Project image'}</span>}
               </button>
               <div className='project__cardBody'>
                 <div className='project__eyebrow'>
-                  <span>{card.is_featured ? 'Featured project' : 'Selected work'}</span>
+                  <span>{ar ? (card.is_featured ? 'مشروع مميز' : 'من أعمالي') : (card.is_featured ? 'Featured project' : 'Selected work')}</span>
                   {card.year && <span>{card.year}</span>}
                 </div>
-                <h3 className='project__title'>{card.title}</h3>
-                {card.short_description && <p className='project__summary'>{card.short_description}</p>}
+                <h3 className='project__title'>{ar ? copy(card)?.title || card.title : card.title}</h3>
+                {card.short_description && <p className='project__summary'>{ar ? copy(card)?.description || card.short_description : card.short_description}</p>}
                 {tags.length > 0 && <div className='project__tags'>{tags.slice(0, 4).map((tag) => <span key={tag} className='project__tagBadge'>{tag}</span>)}</div>}
                 <div className='project__cardActions'>
-                  <button type='button' className='project__textButton' onClick={() => setSelectedProject(card)}>View details →</button>
-                  {card.website_url && <a href={card.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
+                  <button type='button' className='project__textButton' onClick={() => setSelectedProject(card)}>{ar ? 'عرض التفاصيل ←' : 'View details →'}</button>
+                  {card.website_url && <a href={card.website_url} target='_blank' rel='noopener noreferrer'>{ar ? 'زيارة الموقع ↗' : 'Visit website ↗'}</a>}
                 </div>
               </div>
             </article>
@@ -182,25 +194,27 @@ const Project = () => {
       {projects.length > initialVisibleCount && (
         <div className='project__actions'>
           <button type='button' className='project__showMore' onClick={() => setShowAll((prev) => !prev)}>
-            {showAll ? 'Show Less' : `Show More (${projects.length - initialVisibleCount})`}
+            {ar ? (showAll ? 'عرض أقل' : `عرض المزيد (${projects.length - initialVisibleCount})`) : (showAll ? 'Show Less' : `Show More (${projects.length - initialVisibleCount})`)}
           </button>
         </div>
       )}
 
       {selectedProject && createPortal((
         <div className='project__modalOverlay' role='presentation' onClick={() => setSelectedProject(null)}>
-          <div className='project__modal' role='dialog' aria-modal='true' aria-label={`${selectedProject.title} details`} onClick={(event) => event.stopPropagation()}>
-            <button type='button' className='project__modalClose' aria-label='Close project details' onClick={() => setSelectedProject(null)}>×</button>
-            {activeImage && <img className='project__modalImage' src={activeImage} alt={selectedProject.title} />}
-            {selectedImages.length > 1 && <div className='project__gallery'>{selectedImages.map((url, index) => <button type='button' className={url === activeImage ? 'project__galleryItem project__galleryItem--active' : 'project__galleryItem'} key={`${url}-${index}`} onClick={() => setActiveImage(url)} aria-label={`Show project image ${index + 1}`}><img src={url} alt='' loading='lazy' /></button>)}</div>}
+          <div className='project__modal' role='dialog' aria-modal='true' aria-label={ar ? `تفاصيل ${copy(selectedProject)?.title || selectedProject.title}` : `${selectedProject.title} details`} onClick={(event) => event.stopPropagation()}>
+            <button type='button' className='project__modalClose' aria-label={ar ? 'إغلاق التفاصيل' : 'Close project details'} onClick={() => setSelectedProject(null)}>×</button>
+            {activeImage && <img className='project__modalImage' src={activeImage} alt={ar ? copy(selectedProject)?.title || selectedProject.title : selectedProject.title} />}
+            {selectedImages.length > 1 && <div className='project__gallery'>{selectedImages.map((url, index) => <button type='button' className={url === activeImage ? 'project__galleryItem project__galleryItem--active' : 'project__galleryItem'} key={`${url}-${index}`} onClick={() => setActiveImage(url)} aria-label={ar ? `عرض صورة المشروع ${index + 1}` : `Show project image ${index + 1}`}><img src={url} alt='' loading='lazy' /></button>)}</div>}
             <div className='project__modalContent'>
-              <h2>{selectedProject.title}</h2>
+              <h2>{ar ? copy(selectedProject)?.title || selectedProject.title : selectedProject.title}</h2>
               {(selectedProject.client_name || selectedProject.year) && <p className='project__meta'>{[selectedProject.client_name, selectedProject.year].filter(Boolean).join(' · ')}</p>}
-              <p>{selectedProject.description || selectedProject.short_description}</p>
-              {selectedProject.challenge && <div><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
-              {selectedProject.solution && <div><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
-              {selectedProject.key_features && selectedProject.key_features.length > 0 && (
-                <section className='project__features' aria-label='Key features'>
+              <p>{ar ? copy(selectedProject)?.description || selectedProject.short_description : selectedProject.description || selectedProject.short_description}</p>
+              {ar && (selectedProject.challenge || selectedProject.solution || selectedProject.key_features?.length) ? <button type='button' className='project__textButton' onClick={() => setShowOriginalDetails((value) => !value)}>{showOriginalDetails ? 'إخفاء التفاصيل الإنجليزية' : 'عرض التفاصيل الإضافية بالإنجليزية'}</button> : null}
+              {ar && showOriginalDetails && selectedProject.description && <p lang='en' dir='ltr'>{selectedProject.description}</p>}
+              {(!ar || showOriginalDetails) && selectedProject.challenge && <div lang='en' dir='ltr'><h3>Challenge</h3><p>{selectedProject.challenge}</p></div>}
+              {(!ar || showOriginalDetails) && selectedProject.solution && <div lang='en' dir='ltr'><h3>Solution</h3><p>{selectedProject.solution}</p></div>}
+              {(!ar || showOriginalDetails) && selectedProject.key_features && selectedProject.key_features.length > 0 && (
+                <section className='project__features' aria-label='Key features' lang='en' dir='ltr'>
                   <h3>Key features</h3>
                   <div className='project__featureGroups'>
                     {selectedProject.key_features.map((group, index) => (
@@ -212,9 +226,9 @@ const Project = () => {
                   </div>
                 </section>
               )}
-              {detailLoading && <p role='status'>Loading details…</p>}
-              {detailError && <p role='alert'>{detailError}</p>}
-              {selectedProject.website_url && <a href={selectedProject.website_url} target='_blank' rel='noopener noreferrer'>Visit website ↗</a>}
+              {detailLoading && <p role='status'>{ar ? 'جاري تحميل التفاصيل…' : 'Loading details…'}</p>}
+              {detailError && <p role='alert'>{ar ? 'التفاصيل غير متاحة الآن.' : detailError}</p>}
+              {selectedProject.website_url && <a href={selectedProject.website_url} target='_blank' rel='noopener noreferrer'>{ar ? 'زيارة الموقع ↗' : 'Visit website ↗'}</a>}
             </div>
           </div>
         </div>

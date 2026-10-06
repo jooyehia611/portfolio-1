@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import AnimatedLetters from '@components/AnimatedLetters/AnimatedLetters';
 import './introduction.scss';
+import { useLocale } from '../../i18n/Locale';
 
 const Introduction = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
   const [letterClass, setLetterClass] = useState('text-animate');
   const nameArray = [...'Yousef,'];
   const jobArray = [...'Senior Backend Developer'];
@@ -20,6 +23,7 @@ const Introduction = () => {
       <div className='intro__left'>
         <span className='sectiontag'>&lt;section&gt;</span>
         <h1 className='intro__headingPrimary'>
+          {ar ? <><span>أهلًا، أنا يوسف،</span><br /><span className='intro__jobWrap'>مطور Backend أول</span></> : <>
           <span className={letterClass}>H</span>
           <span className={`${letterClass} _5`}>i,</span>
 &nbsp;
@@ -34,6 +38,7 @@ const Introduction = () => {
           <span className='intro__jobWrap'>
             <AnimatedLetters letterClass={letterClass} strArray={jobArray} idx={7} />
           </span>
+          </>}
         </h1>
         <h2 className='intro__headingSecondary'>
           {skills.map((skill) => (
@@ -41,7 +46,7 @@ const Introduction = () => {
           ))}
         </h2>
         <HashLink to='/#contact' className='intro__button'>
-          Contact Me
+          {ar ? 'تواصل معي' : 'Contact Me'}
         </HashLink>
         <span className='sectiontag'>&lt;/section&gt;</span>
       </div>

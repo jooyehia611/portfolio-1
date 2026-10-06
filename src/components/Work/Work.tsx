@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedLettersFast from '@components/AnimatedLettersFast/AnimatedLettersFast';
 import './work.scss';
+import { useLocale } from '../../i18n/Locale';
 
 type Role = {
   title: string;
@@ -76,7 +77,46 @@ const ROLES: Role[] = [
   },
 ];
 
+const AR_ROLES: Role[] = [
+  { title: 'مطور Backend', company: 'Myclicx', period: 'فبراير 2026 – الآن', bullets: [
+    'طورت منصة تعمير لإدارة المرافق والصيانة عبر مواقع ومبانٍ وأصول وفرق تشغيل متعددة.',
+    'بنيت مسارات طلبات الصيانة من البلاغ وتعيين الفني إلى التنفيذ والمراجعة والإغلاق.',
+    'نفذت جدولة الصيانة الوقائية وأوامر العمل التصحيحية وتتبع اتفاقيات مستوى الخدمة والتصاريح.',
+    'طورت لوحات تقارير لمتابعة حالة الأصول وتقدم الصيانة وأداء الفرق باستخدام Laravel.',
+  ] },
+  { title: 'مطور Backend', company: 'RFID Saudi Trading', period: 'ديسمبر 2024 – فبراير 2026', bullets: [
+    'بنيت منصة مشتريات تشمل طلبات الشراء وعروض الأسعار والموردين والفواتير والمدفوعات والتقارير.',
+    'طورت منصة لإدارة العقارات والملاك والوثائق القانونية.',
+    'أنشأت واجهات API لتطبيق CarLog لإدارة المركبات والمعدات وتتبع الاستخدام والفحوصات.',
+    'طورت واجهات API لإدارة المستودعات والخدمات اللوجستية بتقنية RFID.',
+    'أنشأت أدوات أتمتة باستخدام Python لتقليل العمل اليدوي.',
+  ] },
+  { title: 'مطور ويب Full Stack', company: 'Triple Agency', period: 'يونيو 2023 – ديسمبر 2024', bullets: [
+    'بنيت منصة Laravel لإدارة العيادات متعددة الفروع والحجوزات والمرضى والفواتير والتقارير.',
+    'طورت لوحات إدارة للقطاع الصحي تشمل الأطباء والمرضى والمواعيد.',
+    'طورت مواقع WordPress بتخصيص القوالب والإضافات والتكاملات.',
+    'نفذت واجهات REST API آمنة باستخدام Laravel Sanctum وJWT.',
+    'طورت واجهات لمنصة عقارية تشمل البحث والمفضلة والمحافظ والمعاملات.',
+  ] },
+  { title: 'مطور Backend', company: 'Medicamall', period: 'يوليو 2022 – يونيو 2023', bullets: [
+    'طورت متجرًا إلكترونيًا للمنتجات الطبية باستخدام Magento 2.',
+    'خصصت الواجهة وأدرت المنتجات والتكاملات وحسنت الأداء.',
+    'طورت متجرًا إضافيًا للأدوات الجراحية والمستلزمات الطبية.',
+  ] },
+  { title: 'مطور ويب Full Stack — عمل حر', company: '', period: 'فبراير 2021 – الآن', bullets: [
+    'بنيت سوقًا متعدد البائعين للطلب والتوصيل باستخدام Laravel.',
+    'طورت إدارة المنتجات والطلبات والمناطق والمحافظ والحملات، مع تكاملات الدفع وFirebase وTwilio.',
+    'بنيت منصة لإدارة الفروع والعملاء والطلبات والعمولات والتقارير المالية.',
+    'طورت نظامًا للأندية الرياضية يشمل العضويات والمدفوعات والحضور.',
+    'أنشأت منصة وواجهات API لحجز برامج العمرة والحج وإدارة الوكلاء والفواتير.',
+    'طورت منصة عيادتي لإدارة العيادات والممارسات الطبية.',
+  ] },
+];
+
 const Work = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
+  const roles = ar ? AR_ROLES : ROLES;
   const [letterClass, setLetterClass] = useState('text-animate-fast');
   const [activeRole, setActiveRole] = useState(0);
   const nameArray = [...'02. Work Experience'];
@@ -88,20 +128,20 @@ const Work = () => {
     return () => window.clearTimeout(timer);
   }, []);
 
-  const role = ROLES[activeRole];
+  const role = roles[activeRole];
 
   return (
     <section className='work' id='work'>
       <span className='sectiontag'>&lt;section&gt;</span>
       <h1 className='about__headingPrimary'>
-        <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
+        {ar ? '02. الخبرة العملية' : <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />}
       </h1>
       <p className='work__lede'>
-        Backend and full-stack engineer delivering scalable Laravel platforms, secure REST APIs, and high-impact e-commerce solutions across healthcare, logistics, and enterprise domains.
+        {ar ? 'مطور Backend وFull Stack أبني منصات Laravel قابلة للتوسع وواجهات REST آمنة وحلول تجارة إلكترونية للقطاع الصحي والخدمات اللوجستية والشركات.' : 'Backend and full-stack engineer delivering scalable Laravel platforms, secure REST APIs, and high-impact e-commerce solutions across healthcare, logistics, and enterprise domains.'}
       </p>
       <div className='work__experience'>
-        <div className='work__roleList' role='tablist' aria-label='Work experience'>
-          {ROLES.map((item, index) => (
+        <div className='work__roleList' role='tablist' aria-label={ar ? 'الخبرة العملية' : 'Work experience'}>
+          {roles.map((item, index) => (
             <button
               type='button'
               role='tab'
@@ -116,12 +156,12 @@ const Work = () => {
                 if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp' && event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
                 event.preventDefault();
                 const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
-                const next = (index + direction + ROLES.length) % ROLES.length;
+                const next = (index + direction + roles.length) % roles.length;
                 setActiveRole(next);
                 document.getElementById(`work-tab-${next}`)?.focus();
               }}
             >
-              <span className='work__roleCompany'>{item.company || 'Freelance'}</span>
+              <span className='work__roleCompany'>{item.company || (ar ? 'عمل حر' : 'Freelance')}</span>
               <span className='work__rolePeriod'>{item.period}</span>
             </button>
           ))}
@@ -129,9 +169,9 @@ const Work = () => {
         <div className='work__panel' id='work-panel' role='tabpanel' aria-labelledby={`work-tab-${activeRole}`} tabIndex={0}>
           <div className='work__panelHead'>
             <div>
-              <span className='work__panelLabel'>Experience / {String(activeRole + 1).padStart(2, '0')}</span>
+              <span className='work__panelLabel'>{ar ? 'الخبرة' : 'Experience'} / {String(activeRole + 1).padStart(2, '0')}</span>
               <h2 className='work__title'>{role.title}</h2>
-              <p className='work__company'>{role.company || 'Independent practice'}</p>
+              <p className='work__company'>{role.company || (ar ? 'عمل مستقل' : 'Independent practice')}</p>
             </div>
             <span className='work__period'>{role.period}</span>
           </div>

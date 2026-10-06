@@ -3,8 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import './contact.scss';
 import Map, { Marker } from 'react-map-gl';
 import emailjs from '@emailjs/browser';
+import { useLocale } from '../../i18n/Locale';
+import Navbar from '../../components/Navbar/Navbar';
 
 const Contact = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
   const [letterClass, setLetterClass] = useState('text-animate');
   const nameArray = [...'Contact me'];
 
@@ -26,9 +30,9 @@ const Contact = () => {
     if (form.current !== null) {
       emailjs.sendForm('service_clrfl7q', 'template_56ibui7', form.current, 'hWYBLhSzbCLzcSlTF')
         .then(() => {
-          window.alert('Mail Sent Successfully!!!');
+          window.alert(ar ? 'تم إرسال الرسالة بنجاح.' : 'Mail sent successfully.');
         }, (error) => {
-          window.alert('Mail Not Sent!!!');
+          window.alert(ar ? 'تعذر إرسال الرسالة. حاول مرة أخرى.' : 'Could not send the message. Please try again.');
         });
     }
 
@@ -38,31 +42,33 @@ const Contact = () => {
   };
 
   return (
-    <div className='contact'>
+    <><Navbar /><div className='contact'>
       <div className='contact__left'>
         <span className='tag' style={{ padding: '0rem' }}>&lt;body&gt;</span>
         <h1 className='about__headingPrimary'>
-          <AnimatedLetters letterClass={letterClass} strArray={nameArray} idx={15} />
+          {ar ? 'تواصل معي' : <AnimatedLetters letterClass={letterClass} strArray={nameArray} idx={15} />}
         </h1>
         <p className='contact__description'>
+          {ar ? 'أهتم بفرص تطوير Backend وLaravel، وتكامل واجهات API والتجارة الإلكترونية. استخدم النموذج للاستفسار عن مشروع أو للتعاون، وأضف تفاصيل التقنيات والجدول الزمني لأتمكن من الرد بشكل واضح.' : <>
           I am interested in backend and Laravel-focused roles, API integrations, and ecommerce work (Magento or Laravel). Use the form for project inquiries or collaboration—add context on stack and timelines so I can respond with something concrete.
+          </>}
         </p>
         <div className='form'>
           <form ref={form} onSubmit={sendEmail}>
             <div className='form__group'>
-              <input name='user_name' ref={inputRef1} type='text' className='form__input' id='name' placeholder='Full Name' required />
-              <label htmlFor='name' className='form__label'>Full Name</label>
+              <input name='user_name' ref={inputRef1} type='text' className='form__input' id='name' placeholder={ar ? 'الاسم الكامل' : 'Full Name'} required />
+              <label htmlFor='name' className='form__label'>{ar ? 'الاسم الكامل' : 'Full Name'}</label>
             </div>
             <div className='form__group'>
-              <input type='email' ref={inputRef2} name='user_email' className='form__input' id='email' placeholder='Enter Your Email Address' required />
-              <label htmlFor='email' className='form__label'>Email Address</label>
+              <input type='email' ref={inputRef2} name='user_email' className='form__input' id='email' placeholder={ar ? 'عنوان بريدك الإلكتروني' : 'Enter Your Email Address'} required dir='ltr' />
+              <label htmlFor='email' className='form__label'>{ar ? 'البريد الإلكتروني' : 'Email Address'}</label>
             </div>
             <div className='form__group'>
-              <textarea name='message' ref={inputRef3} className='form__input' id='message' placeholder='Message' required />
-              <label htmlFor='message' className='form__label'>Message</label>
+              <textarea name='message' ref={inputRef3} className='form__input' id='message' placeholder={ar ? 'رسالتك' : 'Message'} required />
+              <label htmlFor='message' className='form__label'>{ar ? 'الرسالة' : 'Message'}</label>
             </div>
             <button type='submit' value='Send' className='intro__button'>
-              Send Mail
+              {ar ? 'إرسال الرسالة' : 'Send Mail'}
             </button>
           </form>
         </div>
@@ -104,7 +110,7 @@ const Contact = () => {
           </Marker>
         </Map>
       </div>
-    </div>
+    </div></>
   );
 };
 

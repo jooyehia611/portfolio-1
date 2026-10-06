@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AnimatedLettersFast from '../AnimatedLettersFast/AnimatedLettersFast';
 import './touch.scss';
+import { useLocale } from '../../i18n/Locale';
 
 const CONTACTS = [
   {
@@ -27,6 +28,8 @@ const CONTACTS = [
 ] as const;
 
 const Touch = () => {
+  const { locale } = useLocale();
+  const ar = locale === 'ar';
   const [letterClass, setLetterClass] = useState('text-animate-fast');
   const nameArray = [...'Get In Touch'];
 
@@ -39,12 +42,12 @@ const Touch = () => {
     <section className='sec' id='contact'>
       <div className='touch'>
 
-        <label htmlFor='touchLabel' className='touch__label'>05. What&apos;s next?</label>
+        <span className='touch__label'>{ar ? '05. الخطوة التالية' : "05. What's next?"}</span>
         <h1 className='touch__headingPrimary'>
-          <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />
+          {ar ? 'تواصل معي' : <AnimatedLettersFast letterClass={letterClass} strArray={nameArray} idx={15} />}
         </h1>
         <p className='touch__description'>
-          I am open to backend and full-stack Laravel roles, API-heavy products, and ecommerce platforms. If you want to talk architecture, integrations, or a new build, send a message—I typically reply within a couple of days.
+          {ar ? 'متاح لفرص تطوير Backend وFull Stack باستخدام Laravel، وبناء واجهات API ومنصات التجارة الإلكترونية. إذا كان لديك مشروع أو فرصة تعاون، أرسل رسالة وسأرد عادةً خلال يومين.' : 'I am open to backend and full-stack Laravel roles, API-heavy products, and ecommerce platforms. If you want to talk architecture, integrations, or a new build, send a message—I typically reply within a couple of days.'}
         </p>
         <div className='touch__contacts'>
           {CONTACTS.map((c) => (
@@ -62,7 +65,7 @@ const Touch = () => {
                 )}
               </span>
               <span className='touch__contactText'>
-                <span className='touch__contactLabel'>{c.label}</span>
+                <span className='touch__contactLabel'>{ar && c.id === 'email' ? 'البريد الإلكتروني' : c.label}</span>
                 <span className='touch__contactValue'>{c.value}</span>
               </span>
             </a>
